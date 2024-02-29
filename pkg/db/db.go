@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/MuhammedYahiya/Ecom-api/pkg/domain"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -25,5 +26,7 @@ func ConnectDb() {
 	}
 	DB = db
 	log.Println("Connected to database successfully")
+
+	DB.AutoMigrate(&domain.User{})
 
 }
