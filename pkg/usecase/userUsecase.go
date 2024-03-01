@@ -15,6 +15,11 @@ func CreateUser(userData *domain.User) error {
 	}
 	res, err := repository.FindUserByEmail(userData)
 	if err != nil && res == nil {
+		pass, error := utils.HashPassword(userData.Password)
+		if error != nil {
+			return errors.New("failed to hash")
+		}
+		userData.Password = pass
 		err := repository.CreateUser(userData)
 		return err
 	}
