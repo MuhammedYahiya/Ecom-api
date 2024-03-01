@@ -1,6 +1,8 @@
 package usecase
 
 import (
+	"errors"
+
 	"github.com/MuhammedYahiya/Ecom-api/pkg/domain"
 	"github.com/MuhammedYahiya/Ecom-api/pkg/repository"
 	"github.com/MuhammedYahiya/Ecom-api/pkg/utils"
@@ -11,9 +13,10 @@ func CreateUser(userData *domain.User) error {
 	if validateErr != nil {
 		return validateErr
 	}
-	err := repository.CreateUser(userData)
-	if err != nil {
+	res, err := repository.FindUserByEmail(userData)
+	if err != nil && res == nil {
+		err := repository.CreateUser(userData)
 		return err
 	}
-	return nil
+	return errors.New("user  with the same mail id  already exist")
 }

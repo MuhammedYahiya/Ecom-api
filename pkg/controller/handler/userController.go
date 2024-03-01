@@ -25,7 +25,7 @@ func RegisterUser(ctx *gin.Context) {
 		ctx.JSON(http.StatusNotFound, gin.H{
 			"success": false,
 			"Message": "Register the User Failed",
-			"Error":   err,
+			"Error":   err.Error(),
 		})
 		return
 	}
