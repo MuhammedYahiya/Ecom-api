@@ -10,6 +10,7 @@ func InitializeRouter(r *gin.Engine) {
 	userGroup := r.Group("/user")
 	{
 		userGroup.POST("/register", handler.RegisterUser)
+		userGroup.POST("/register/validate", handler.ValidateUser)
 	}
 
 }

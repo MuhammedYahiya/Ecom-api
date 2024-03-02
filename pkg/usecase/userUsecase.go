@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/MuhammedYahiya/Ecom-api/pkg/domain"
 	"github.com/MuhammedYahiya/Ecom-api/pkg/repository"
@@ -13,8 +14,13 @@ func CreateUser(userData *domain.User) error {
 	if validateErr != nil {
 		return validateErr
 	}
-	res, err := repository.FindUserByEmail(userData)
+	res, err := repository.FindUserByEmail(userData.Email)
 	if err != nil && res == nil {
+		otp, otpError := utils.Otpgeneration(userData.Email)
+		if otpError != nil {
+			return otpError
+		}
+		userData.Otp = otp
 		pass, error := utils.HashPassword(userData.Password)
 		if error != nil {
 			return errors.New("failed to hash")
@@ -24,4 +30,22 @@ func CreateUser(userData *domain.User) error {
 		return err
 	}
 	return errors.New("user  with the same mail id  already exist")
+}
+
+func RegistrationValidate(userData *domain.User) error {
+	enteredOtp := userData.Otp
+	fmt.Println(enteredOtp)
+	fmt.Println(userData.Email)
+
+	res, err := repository.FindUserByEmail(userData.Email)
+	fmt.Println(res.Email)
+	fmt.Println(res.Otp)
+	if err != nil {
+		return errors.New("you should register first")
+	}
+	if userData.Email == res.Email && enteredOtp == res.Otp {
+		return nil
+	}
+	return errors.New("invalid Otp")
+
 }

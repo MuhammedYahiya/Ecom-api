@@ -14,17 +14,16 @@ func CreateUser(userData *domain.User) error {
 	return nil
 }
 
-func FindUserByEmail(userData *domain.User) (*domain.User, error) {
+func FindUserByEmail(email string) (*domain.User, error) {
 	user := &domain.User{}
 
-	result := db.DB.Where("email=?", userData.Email).First(userData)
+	result := db.DB.Where("email=?", email).First(user)
 
 	if result.Error != nil {
+		if result.RowsAffected == 0 {
+			return nil, gorm.ErrRecordNotFound
+		}
 		return nil, result.Error
-	}
-
-	if result.RowsAffected == 0 {
-		return nil, gorm.ErrRecordNotFound
 	}
 
 	return user, nil
