@@ -28,3 +28,12 @@ func FindUserByEmail(email string) (*domain.User, error) {
 
 	return user, nil
 }
+
+func UpdateUserStatus(email string) error {
+	user := &domain.User{}
+	result := db.DB.Model(&user).Where("email=?", email).Update("is_verified", true)
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

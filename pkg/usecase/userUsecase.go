@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"errors"
-	"fmt"
 
 	"github.com/MuhammedYahiya/Ecom-api/pkg/domain"
 	"github.com/MuhammedYahiya/Ecom-api/pkg/repository"
@@ -34,12 +33,7 @@ func CreateUser(userData *domain.User) error {
 
 func RegistrationValidate(userData *domain.User) error {
 	enteredOtp := userData.Otp
-	fmt.Println(enteredOtp)
-	fmt.Println(userData.Email)
-
 	res, err := repository.FindUserByEmail(userData.Email)
-	fmt.Println(res.Email)
-	fmt.Println(res.Otp)
 	if err != nil {
 		return errors.New("you should register first")
 	}
@@ -48,4 +42,12 @@ func RegistrationValidate(userData *domain.User) error {
 	}
 	return errors.New("invalid Otp")
 
+}
+
+func VerifyUser(userData *domain.User) error {
+	err := repository.UpdateUserStatus(userData.Email)
+	if err != nil {
+		return err
+	}
+	return nil
 }

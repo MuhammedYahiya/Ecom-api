@@ -57,7 +57,15 @@ func ValidateUser(ctx *gin.Context) {
 		})
 		return
 	}
-
+	err = usecase.VerifyUser(&userData)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"success": false,
+			"Message": "Failed to update user status",
+			"Error":   err.Error(),
+		})
+		return
+	}
 	ctx.JSON(http.StatusOK, gin.H{
 		"success": true,
 		"Message": "User Validation success",
