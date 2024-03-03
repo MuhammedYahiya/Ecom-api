@@ -51,3 +51,23 @@ func VerifyUser(userData *domain.User) error {
 	}
 	return nil
 }
+
+func LoginUser(userData *domain.User) (error, *domain.User) {
+	res, err := repository.FindUserByEmail(userData.Email)
+	if err != nil {
+		return err, nil
+	}
+
+	if !res.IsVerified {
+		return errors.New("account is not verified"), nil
+	}
+
+	if !res.IsAdmin {
+		verifyPassword := utils.ChecKPasswordHash(userData.Password, res.Password)
+		if userData.Email == res.Email && verifyPassword {
+			return nil, res
+		}
+	}
+
+	return errors.New("incorrect password"), nil
+}

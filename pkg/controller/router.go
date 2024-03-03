@@ -11,6 +11,7 @@ func InitializeRouter(r *gin.Engine) {
 	{
 		userGroup.POST("/register", handler.RegisterUser)
 		userGroup.POST("/register/validate", handler.ValidateUser)
+		userGroup.POST("/login", handler.UserLogin)
 	}
 
 }
